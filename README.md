@@ -4,6 +4,8 @@
 
 Simple command-line system information tool written too like neofetch but in rust
 
+## Demo
+![](media/demo.gif)
 
 ## Build
 
