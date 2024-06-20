@@ -9,7 +9,7 @@ readme = "README.md"
 homepage = "https://github.com/Aviksaikat/Just_Fetch"
 repository = "https://github.com/Aviksaikat/Just_Fetch"
 license-file = "LICENSE"
-keywords = ["fetch", "screenfetch", "rust", "cargo", "cross-paltform", "linux", "windows", "macOS"]
+keywords = ["fetch", "screenfetch", "rust", "cargo", "cross-paltform"]
 categories = ["command-line-utilities"]
 include = [
     "**/*.rs",
