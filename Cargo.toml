@@ -3,6 +3,20 @@ name = "jfetch"
 version = "0.0.1"
 edition = "2021"
 
+description = "Simple command-line system information tool written tool like neofetch but in rust"
+documentation = "https://github.com/Aviksaikat/Just_Fetch#-just-fetch-jfetch-"
+readme = "README.md"
+homepage = "https://github.com/Aviksaikat/Just_Fetch"
+repository = "https://github.com/Aviksaikat/Just_Fetch"
+license = "LICENSE"
+keywords = ["fetch", "screenfetch", "rust", "cargo", "cross-paltform", "linux", "windows", "macOS"]
+categories = ["command-line-utilities"]
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]
+
+
 [dependencies]
 bytesize = "1.3.0"
 colored = "2.1.0"
@@ -10,3 +24,4 @@ colored = "2.1.0"
 rand = "0.8.5"
 sysinfo = "0.30.12"
 systemstat = "0.2.3"
+

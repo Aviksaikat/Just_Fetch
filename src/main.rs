@@ -19,7 +19,6 @@ use std::time::Duration;
 use print::*;
 use stats::*;
 
-
 fn main() -> Result<(), Box<dyn Error>> {
     print_banner();
     if let Some(distro) = get_distro() {

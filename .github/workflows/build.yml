@@ -1,63 +1,99 @@
-name: Build and Release
-
+name: Build
 on:
-  push:
-    branches: [ "main" ]
-    tags:
-      - 'v*'
   pull_request:
-    branches: [ "main" ]
-    tags:
-      - 'v*'
+  push:
+    branches: ["main", "master"]
+  schedule:
+    - cron: '00 01 * * *'
 
 jobs:
-
-  build:
+  check:
+    name: Check
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest, openbsd-latest, raspberrypi-latest, ios-latest, android-latest]
-        include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-          - os: windows-latest
-            target: x86_64-pc-windows-gnu
-          - os: macos-latest
-            target: x86_64-apple-darwin
-          - os: openbsd-latest
-            target: x86_64-unknown-openbsd
-          - os: raspberrypi-latest
-            target: armv7-unknown-linux-gnueabihf
-          - os: ios-latest
-            target: aarch64-apple-ios
-          - os: android-latest
-            target: aarch64-linux-android
-
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        target: ${{ matrix.target }}
-        override: true
-    - name: Build
-      run: cargo build --release --target ${{ matrix.target }}
-    - name: Package
-      run: |
-        mkdir -p release
-        cp target/${{ matrix.target }}/release/jfetch release/
-        if [ "${{ matrix.os }}" == "windows-latest" ]; then
-          7z a release/jfetch-${{ matrix.target }}.zip release/jfetch.exe
-        else
-          tar -czf release/jfetch-${{ matrix.target }}.tar.gz release/jfetch
-        fi
-    - name: Upload Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: |
-          release/jfetch-${{ matrix.target }}.*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - uses: Swatinem/rust-cache@v1
+
+      - name: Run cargo check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+
+  test:
+    name: Test Suite
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        rust: [stable]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+
+      - uses: Swatinem/rust-cache@v1
+
+      - name: Run cargo test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+
+  lints:
+    name: Lints
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v1
+
+      - name: Run cargo fmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+      - name: Run cargo clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -D warnings
+
+      - name: Run rustdoc lints
+        uses: actions-rs/cargo@v1
+        env:
+          RUSTDOCFLAGS: "-D missing_docs -D rustdoc::missing_doc_code_examples"
+        with:
+          command: doc
+          args: --workspace --all-features --no-deps --document-private-items

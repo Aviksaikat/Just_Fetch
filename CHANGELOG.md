@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Updated the binary name to jfetch. docs: added banner
 - OS name,kernel version, shell, uptime, disk usage added
 - Workflows updated
+- Added option to see ram usage. chore: addeded workflows for labeler & building binaries
 
 ### 📚 Documentation
 
