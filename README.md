@@ -32,9 +32,17 @@ Just Fetch displays the following system information:
 To install jfetch, you need to have Rust installed. Then run:
 
 ```sh
+cargo install jfetch
+```
+
+### Build from source
+
+```sh
 git clone https://github.com/Aviksaikat/Just_Fetch
 cd Just_fetch
-cargo install jfetch
+cargo build --bin jfetch
+# run
+cargo run --bin jfetch
 ```
 
 ## 🛠 Usage
