@@ -214,7 +214,7 @@ jobs:
       # Read more: https://doc.rust-lang.org/cargo/reference/publishing.html
 
       - name: Install ${{ matrix.rust }} toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
           profile: minimal
           toolchain: ${{ matrix.rust }}
