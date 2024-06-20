@@ -122,11 +122,28 @@ jobs:
         with:
           submodules: false
 
-      - uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: bins-x86_64-linux
+          path: dist/linux
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bins-aarch64-linux
+          path: dist/arm
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bins-x86_64-macos
+          path: dist/macos
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bins-x86_64-windows
+          path: dist/windows
 
-      - run: ls -al bins-*
+      - run: ls -al dist/*
 
       - name: Calculate tag name
         run: |
@@ -147,16 +164,16 @@ jobs:
           mkdir tmp
           mkdir dist
 
-          for dir in bins-* ; do
-              platform=${dir#"bins-"}
+          for dir in dist/* ; do
+              platform=$(basename $dir)
               unset exe
-              if [[ $platform =~ "windows" ]]; then
+              if [[ $platform == "windows" ]]; then
                   exe=".exe"
               fi
               pkgname=$PROJECT_NAME-$TAG-$platform
               mkdir tmp/$pkgname
               # cp LICENSE README.md tmp/$pkgname
-              mv bins-$platform/$BIN_NAME$exe tmp/$pkgname
+              mv $dir/$BIN_NAME$exe tmp/$pkgname
               chmod +x tmp/$pkgname/$BIN_NAME$exe
 
               if [ "$exe" = "" ]; then
