@@ -116,6 +116,8 @@ jobs:
     name: Publish
     needs: [dist]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -197,14 +199,14 @@ jobs:
         run: |
           printf "::set-output name=%s::%s\n" tag-name "${GITHUB_REF#refs/tags/}"
 
-      - uses: mislav/bump-homebrew-formula-action@v3
-        with:
-          formula-path: ${{env.PROJECT_NAME}}.rb
-          homebrew-tap: ${{ env.BREW_TAP }}
-          download-url: "https://github.com/${{ env.REPO_NAME }}/releases/download/${{ steps.extract-version.outputs.tag-name }}/${{env.PROJECT_NAME}}-${{ steps.extract-version.outputs.tag-name }}-x86_64-macos.tar.xz"
-          commit-message: updating formula for ${{ env.PROJECT_NAME }}
-        env:
-          COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+      # - uses: mislav/bump-homebrew-formula-action@v3
+      #   with:
+      #     formula-path: ${{env.PROJECT_NAME}}.rb
+      #     homebrew-tap: ${{ env.BREW_TAP }}
+      #     download-url: "https://github.com/${{ env.REPO_NAME }}/releases/download/${{ steps.extract-version.outputs.tag-name }}/${{env.PROJECT_NAME}}-${{ steps.extract-version.outputs.tag-name }}-x86_64-macos.tar.xz"
+      #     commit-message: updating formula for ${{ env.PROJECT_NAME }}
+      #   env:
+      #     COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
 
       # Uncomment this section if you want to release your package to crates.io
       # Before publishing, make sure you have filled out the following fields:
