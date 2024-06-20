@@ -18,6 +18,10 @@ All notable changes to this project will be documented in this file.
 - Added readme
 - Updated Cargo.toml file. chore: added publish workflow
 
+### ⚙️ Miscellaneous Tasks
+
+- Release drafter added
+
 ### Build
 
 - *(deps)* Bump mislav/bump-homebrew-formula-action from 1 to 3
