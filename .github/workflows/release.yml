@@ -162,7 +162,7 @@ jobs:
 
           rm -rf tmp
           mkdir tmp
-          mkdir dist
+          mkdir -p dist
 
           for dir in dist/* ; do
               platform=$(basename $dir)
