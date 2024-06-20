@@ -3,7 +3,7 @@ use bytesize::ByteSize;
 use std::collections::HashMap;
 use std::fs;
 use std::time::Duration;
-use sysinfo::{System}; // Components, Disks, Networks
+use sysinfo::System;
 use systemstat::Platform;
 use systemstat::System as systemstat_system;
 
@@ -26,12 +26,19 @@ pub struct Shell {
 pub struct SysInfo {
     pub uptime: Duration,
 }
-// T is for generic datatype
+
 #[derive(Debug)]
 pub struct StorageInfo {
     pub total_size: ByteSize,
     pub free: ByteSize,
     pub used: f64,
+}
+
+#[derive(Debug)]
+pub struct MemoryInfo {
+    pub total: u64,
+    pub used: u64,
+    // pub free: String
 }
 
 pub fn get_distro() -> Option<Distro> {
@@ -55,17 +62,6 @@ pub fn get_distro() -> Option<Distro> {
 }
 
 pub fn get_machine_info() -> MachineInfo {
-    //* For some reason the following code has some import issues
-    // let info = nix::sys::utsname::UtsName::uname();
-    // MachineInfo {
-    //     kernel: String::from(info.release()),
-    //     arch: String::from(info.machine()),
-    //     nodeName: String::from(info.nodename())
-    // }
-    // let mut sys = System::new_all();
-    // First we update all information of our `System` struct.
-    // sys.refresh_all();
-
     MachineInfo {
         kernel: System::kernel_version().expect("Unable to get kernel information"),
         arch: System::cpu_arch().expect("Unable to get system architecture"),
@@ -107,15 +103,40 @@ pub fn get_storage_information() -> Result<StorageInfo, Box<dyn std::error::Erro
             //? https://github.com/valpackett/systemstat/blob/trunk/examples/info.rs
             // println!("{} ---{}---> {} (available {} of {})",
             //          mount.fs_mounted_from, mount.fs_type, mount.fs_mounted_on, mount.avail, mount.total);
-            let total_size: f64 = mount.total.to_string().split_whitespace().next().expect("Invalid Storage!").parse().unwrap();
-            let free: f64 = mount.avail.to_string().split_whitespace().next().expect("Invalid Storage!").parse().unwrap();
-            
+            let total_size: f64 = mount
+                .total
+                .to_string()
+                .split_whitespace()
+                .next()
+                .expect("Invalid Storage!")
+                .parse()
+                .unwrap();
+            let free: f64 = mount
+                .avail
+                .to_string()
+                .split_whitespace()
+                .next()
+                .expect("Invalid Storage!")
+                .parse()
+                .unwrap();
+
             Ok(StorageInfo {
                 total_size: mount.total,
                 free: mount.avail,
                 used: total_size - free,
             })
-        } 
+        }
         Err(x) => Err(Box::new(x)),
+    }
+}
+
+pub fn get_memory() -> MemoryInfo {
+    let mut sys = System::new_all();
+
+    sys.refresh_all();
+
+    MemoryInfo {
+        total: sys.total_memory(),
+        used: sys.used_memory(),
     }
 }

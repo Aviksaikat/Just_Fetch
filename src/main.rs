@@ -4,7 +4,7 @@ kernel version [*]
 shell [*]
 uptime [*]
 disk usage [*]
-memory use
+memory use [*]
 window manager
 packages
 */
@@ -19,14 +19,6 @@ use std::time::Duration;
 use print::*;
 use stats::*;
 
-// fn main() {
-//     let distro_name: String = stats::get_distro().unwrap().name;
-//     let distro_colour: String = stats::get_distro().unwrap().colour;
-
-//     // Convert the ANSI color code to colored::Color
-//     let coloured_name = ansi_to_colored_string(&distro_name, &distro_colour);
-//     println!("OS:\t{}", coloured_name);
-// }
 
 fn main() -> Result<(), Box<dyn Error>> {
     print_banner();
@@ -49,6 +41,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     let storage_info: StorageInfo = get_storage_information()?;
 
     print_storage_info(storage_info);
+
+    let memory_info: MemoryInfo = get_memory();
+
+    print_ram_info(memory_info);
 
     Ok(())
 }

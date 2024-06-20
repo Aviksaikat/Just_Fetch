@@ -94,11 +94,27 @@ pub fn print_uptime(duration: Duration) {
     println!("{}\t{}", "❯ Uptime".truecolor(255, 0, 212), time.bold());
 }
 
-
 pub fn print_storage_info(storage_info: StorageInfo) {
     let total_size = storage_info.total_size.to_string();
     let free = storage_info.free.to_string();
     let _used = storage_info.used;
 
-    println!("{}\t\t{} / {}", "❯ Disk".truecolor(51,255,119), free.bold(), total_size.bold());
+    println!(
+        "{}\t\t{} / {}",
+        "❯ Disk".truecolor(51, 255, 119),
+        free.bold().truecolor(153, 255, 102),
+        total_size.bold().truecolor(153, 255, 102)
+    );
+}
+
+pub fn print_ram_info(memory_info: MemoryInfo) {
+    let ram_used: f64 = memory_info.used as f64 / 1_000_000_000.0;
+    let total_used: f64 = memory_info.total as f64 / 1_000_000_000.0;
+
+    println!(
+        "{}\t{:.3} GB / {:.2} GB",
+        "❯ Memory".truecolor(77, 225, 255),
+        ram_used.to_string().bold().truecolor(255, 153, 204),
+        total_used.to_string().bold().truecolor(255, 153, 204)
+    );
 }
