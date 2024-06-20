@@ -116,6 +116,8 @@ jobs:
     name: Publish
     needs: [dist]
     runs-on: ubuntu-latest
+    matrix:
+      rust: stable
     permissions:
       contents: write
     steps:
