@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Added changelog & changed the version to 0.0.1 unreleased:
 - Added readme
 - Updated Cargo.toml file. chore: added publish workflow
+- Readme updated with installation methods
 
 ### ⚙️ Miscellaneous Tasks
 
