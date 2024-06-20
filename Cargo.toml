@@ -1,6 +1,6 @@
 [package]
 name = "jfetch"
-version = "0.0.1"
+version = "0.0.1-rc.1"
 edition = "2021"
 
 description = "Simple command-line system information tool written tool like neofetch but in rust"
