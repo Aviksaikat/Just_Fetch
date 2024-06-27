@@ -14,13 +14,29 @@ mod stats;
 use colored::Colorize;
 use std::error::Error;
 use std::time::Duration;
+use clap::Parser;
 
 //* Custom Creates
 use print::*;
 use stats::*;
 
+
+/// Simple program to greet a person
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    #[arg(short, long, action)]
+    no_banner: bool,
+}
+
+
 fn main() -> Result<(), Box<dyn Error>> {
-    print_banner();
+    let cli = Args::parse();
+
+    if !cli.no_banner {
+        print_banner();
+    }
+
     if let Some(distro) = get_distro() {
         let colored_name = ansi_to_colored_string(&distro.name, &distro.colour);
         println!("{}\t\t{}", "❯ OS".blue(), colored_name);
@@ -38,11 +54,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     print_uptime(duration);
 
     let storage_info: StorageInfo = get_storage_information()?;
-
     print_storage_info(storage_info);
 
     let memory_info: MemoryInfo = get_memory();
-
     print_ram_info(memory_info);
 
     Ok(())
