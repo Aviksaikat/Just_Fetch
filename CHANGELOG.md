@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.4] - 2024-06-20
+## [0.0.5] - 2024-06-27
 
 ### 🚀 Features
 
@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 - OS name,kernel version, shell, uptime, disk usage added
 - Workflows updated
 - Added option to see ram usage. chore: addeded workflows for labeler & building binaries
+- Added option to supress banner
+- Added option to supress banner & fixed formatting
 
 ### 📚 Documentation
 
@@ -18,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Added readme
 - Updated Cargo.toml file. chore: added publish workflow
 - Readme updated with installation methods
+- CHANGELOG.md updated
 
 ### ⚙️ Miscellaneous Tasks
 
