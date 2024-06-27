@@ -11,15 +11,14 @@ packages
 mod print;
 mod stats;
 
+use clap::Parser;
 use colored::Colorize;
 use std::error::Error;
 use std::time::Duration;
-use clap::Parser;
 
 //* Custom Creates
 use print::*;
 use stats::*;
-
 
 /// Simple program to greet a person
 #[derive(Parser, Debug)]
@@ -28,7 +27,6 @@ struct Args {
     #[arg(short, long, action)]
     no_banner: bool,
 }
-
 
 fn main() -> Result<(), Box<dyn Error>> {
     let cli = Args::parse();

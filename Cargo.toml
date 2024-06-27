@@ -1,9 +1,9 @@
 [package]
 name = "jfetch"
-version = "0.0.4"
+version = "0.0.5"
 edition = "2021"
 
-description = "Simple command-line system information tool written tool like neofetch but in rust"
+description = "Simple command-line system information tool written tool like neofetch but in rust 🦀"
 documentation = "https://github.com/Aviksaikat/Just_Fetch#-just-fetch-jfetch-"
 readme = "README.md"
 homepage = "https://github.com/Aviksaikat/Just_Fetch"
