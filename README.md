@@ -4,15 +4,17 @@
 
 ![](media/jfetch_banner.png)
 
-Just Fetch, or simply **jfetch**, is a super cool command-line system information tool written in Rust. It's fast, efficient, and gives you all the essential system information in a neat and organized way, just like neofetch but in Rust! 🚀
-
-**Just Fetch** - because fetching system info should be Just simple and cool. ✨
-
 <center>
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-rust.svg)](https://forthebadge.com)
 
 </center>
+
+Just Fetch, or simply **jfetch**, is a super cool command-line system information tool written in Rust. It's fast, efficient, and gives you all the essential system information in a neat and organized way, just like neofetch but in Rust! 🚀
+
+**Just Fetch** - because fetching system info should be Just simple and cool. ✨
+
+
 
 ## 🚀 Features
 
@@ -69,7 +71,24 @@ This will display all your system information in a clean and organized format. �
 ❯ Uptime:        5 days, 3 hours, 22 minutes
 ❯ Disk:          50GB / 200GB
 ❯ Memory:        8GB / 16GB
+❯ Battery        100%
 ```
+
+## Help screen
+
+```sh
+jfetch -h
+
+Simple command-line system information tool written tool like neofetch but in rust 🦀
+
+Usage: jfetch [OPTIONS]
+
+Options:
+  -n, --no-banner
+  -h, --help       Print help
+  -V, --version    Print version
+```
+
 
 ## 📜 License
 
