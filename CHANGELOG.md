@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.5] - 2024-06-27
+## [0.0.6] - 2024-06-28
 
 ### 🚀 Features
 
@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 - Added option to supress banner
 - Added option to supress banner & fixed formatting
 
+### 🐛 Bug Fixes
+
+- Made it platform independent. feat: added colour pallet
+
 ### 📚 Documentation
 
 - Added changelog & changed the version to 0.0.1 unreleased:
@@ -21,6 +25,8 @@ All notable changes to this project will be documented in this file.
 - Updated Cargo.toml file. chore: added publish workflow
 - Readme updated with installation methods
 - CHANGELOG.md updated
+- Changelogs added
+- Readme updated. v0.0.6 released
 
 ### ⚙️ Miscellaneous Tasks
 
