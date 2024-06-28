@@ -1,7 +1,5 @@
 // Helper script to get system statistics
 use bytesize::ByteSize;
-use std::collections::HashMap;
-use std::fs;
 use std::time::Duration;
 use sysinfo::System;
 use systemstat::Platform;
@@ -10,7 +8,7 @@ use systemstat::System as systemstat_system;
 #[derive(Debug)]
 pub struct Distro {
     pub name: String,
-    pub colour: String,
+    // pub colour: String,
 }
 #[derive(Debug)]
 pub struct MachineInfo {
@@ -41,24 +39,16 @@ pub struct MemoryInfo {
     // pub free: String
 }
 
-pub fn get_distro() -> Option<Distro> {
-    let os_release = fs::read_to_string("/etc/os-release").ok()?;
-    let os_release: HashMap<String, String> = os_release
-        .split('\n')
-        .filter(|line| !line.is_empty())
-        .map(|elm| {
-            let data = elm
-                .split('=')
-                .map(|s| s.to_string().replace('\"', ""))
-                .collect::<Vec<String>>();
-            (data[0].clone(), data[1].clone())
-        })
-        .collect();
+#[derive(Debug, Clone)]
+pub struct BatteryInfo {
+    pub remaining_capacity: f32,
+    pub remaining_time: u64,
+}
 
-    Some(Distro {
-        name: os_release["PRETTY_NAME"].clone(),
-        colour: os_release["ANSI_COLOR"].clone(),
-    })
+pub fn get_distro() -> Option<Distro> {
+    let name = System::name();
+
+    Some(Distro { name: name? })
 }
 
 pub fn get_machine_info() -> MachineInfo {
@@ -138,5 +128,17 @@ pub fn get_memory() -> MemoryInfo {
     MemoryInfo {
         total: sys.total_memory(),
         used: sys.used_memory(),
+    }
+}
+
+pub fn get_battery_info() -> Result<BatteryInfo, Box<dyn std::error::Error>> {
+    let sys = systemstat_system::new();
+
+    match sys.battery_life() {
+        Ok(battery) => Ok(BatteryInfo {
+            remaining_capacity: battery.clone().remaining_capacity * 100.0,
+            remaining_time: battery.remaining_time.as_secs(),
+        }),
+        Err(x) => Err(Box::new(x)),
     }
 }

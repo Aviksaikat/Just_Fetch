@@ -12,7 +12,6 @@ mod print;
 mod stats;
 
 use clap::Parser;
-use colored::Colorize;
 use std::error::Error;
 use std::time::Duration;
 
@@ -20,7 +19,6 @@ use std::time::Duration;
 use print::*;
 use stats::*;
 
-/// Simple program to greet a person
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -35,12 +33,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         print_banner();
     }
 
-    if let Some(distro) = get_distro() {
-        let colored_name = ansi_to_colored_string(&distro.name, &distro.colour);
-        println!("{}\t\t{}", "❯ OS".blue(), colored_name);
-    } else {
-        println!("Could not read distro information");
-    }
+    print_distro_into();
 
     let machine_info = get_machine_info();
     print_machine_info(machine_info);
@@ -56,6 +49,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let memory_info: MemoryInfo = get_memory();
     print_ram_info(memory_info);
+
+    print_battery_info();
+
+    println!();
+    print_pallets();
 
     Ok(())
 }

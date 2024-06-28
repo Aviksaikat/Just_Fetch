@@ -3,6 +3,8 @@ use colored::*;
 use rand::seq::SliceRandom;
 use std::time::Duration;
 
+pub struct Colour(pub String);
+
 //* Print banner with random colours
 pub fn print_banner() {
     let banner = r#"                                                                                         
@@ -15,7 +17,7 @@ pub fn print_banner() {
   ▀▀▀▀▀     ▀▀▀▀ ▀▀   ▀▀▀▀▀▀      ▀▀▀▀             ▀▀          ▀▀▀▀▀      ▀▀▀▀     ▀▀▀▀▀   ▀▀    ▀▀ 
     "#;
 
-    let colors = [
+    let colours = [
         Color::Red,
         Color::Green,
         Color::Yellow,
@@ -26,37 +28,20 @@ pub fn print_banner() {
     ];
 
     let mut rng = rand::thread_rng();
-    let random_color = colors.choose(&mut rng).unwrap();
+    let random_color = colours.choose(&mut rng).unwrap();
 
     println!("{}", banner.color(*random_color));
 }
 
-// Function to convert ANSI color code to colored::Color
-pub fn ansi_to_colored_string(text: &str, ansi_code: &str) -> ColoredString {
-    let codes: Vec<&str> = ansi_code.split(';').collect();
-    if codes.len() == 2 {
-        let intensity = codes[0];
-        let color_code = codes[1];
-
-        let color = match color_code {
-            "30" => Color::Black,
-            "31" => Color::Red,
-            "32" => Color::Green,
-            "33" => Color::Yellow,
-            "34" => Color::Blue,
-            "35" => Color::Magenta,
-            "36" => Color::Cyan,
-            "37" => Color::White,
-            _ => return text.normal(),
-        };
-
-        if intensity == "1" {
-            text.color(color).bold()
-        } else {
-            text.color(color)
-        }
+pub fn print_distro_into() {
+    if let Some(distro) = get_distro() {
+        println!(
+            "{}\t\t{}",
+            "❯ OS".blue(),
+            distro.name.truecolor(255, 102, 102).bold()
+        );
     } else {
-        text.normal()
+        println!("Could not read distro information");
     }
 }
 
@@ -117,4 +102,44 @@ pub fn print_ram_info(memory_info: MemoryInfo) {
         ram_used.to_string().bold().truecolor(255, 153, 204),
         total_used.to_string().bold().truecolor(255, 153, 204)
     );
+}
+
+pub fn print_battery_info() {
+    let battert_info = get_battery_info();
+    let _ = battert_info.as_ref().unwrap().remaining_time;
+
+    println!(
+        "{}\t{}{}",
+        "❯ Battery".truecolor(255, 179, 191),
+        battert_info
+            .as_ref()
+            .unwrap()
+            .remaining_capacity
+            .to_string()
+            .bold()
+            .truecolor(179, 255, 255),
+        "%".truecolor(178, 255, 255).bold() // (battert_info.as_ref().unwrap().remaining_time / 3600).to_string().truecolor(255, 153, 204),
+                                            // (battert_info.as_ref().unwrap().remaining_time % 60).to_string().truecolor(255, 153, 204)
+    );
+}
+
+pub fn color_scheme() -> Vec<Colour> {
+    (40..=47)
+        .chain(100..=107)
+        .map(|cl| Colour(format!("\x1B[{}m", cl)))
+        .collect::<Vec<Colour>>()
+}
+
+pub fn print_pallets() {
+    let mut clrs = String::from("");
+    let colours = color_scheme();
+    for (indx, color) in colours.into_iter().enumerate() {
+        if indx == 16 {
+            clrs += "\n"
+        }
+        clrs += &format!("{}  \x1B[0m", color.0);
+    }
+
+    clrs += "\n";
+    println!("{}", clrs)
 }
