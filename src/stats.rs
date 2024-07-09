@@ -1,7 +1,7 @@
 // Helper script to get system statistics
 use bytesize::ByteSize;
 use std::time::Duration;
-use sysinfo::System;
+use sysinfo::{Disks, System};
 use systemstat::Platform;
 use systemstat::System as systemstat_system;
 
@@ -116,7 +116,22 @@ pub fn get_storage_information() -> Result<StorageInfo, Box<dyn std::error::Erro
                 used: total_size - free,
             })
         }
-        Err(x) => Err(Box::new(x)),
+        Err(e) => {
+            let disks: Disks = Disks::new_with_refreshed_list();
+            if let Some(first_disk) = disks.get(0) {
+                let total_size: u64 = first_disk.total_space();
+                let free: u64 = first_disk.available_space();
+
+                return Ok(StorageInfo {
+                    total_size: bytesize::ByteSize(total_size),
+                    free: bytesize::ByteSize(free),
+                    used: (total_size as f64) - (free as f64),
+                });
+            } else {
+                println!("No disks found.");
+                return Err(Box::new(e));
+            }
+        }
     }
 }
 
