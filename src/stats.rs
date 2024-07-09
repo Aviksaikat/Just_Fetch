@@ -117,19 +117,19 @@ pub fn get_storage_information() -> Result<StorageInfo, Box<dyn std::error::Erro
             })
         }
         Err(e) => {
-            let disks: Disks = Disks::new_with_refreshed_list();
-            if let Some(first_disk) = disks.get(0) {
-                let total_size: u64 = first_disk.total_space();
-                let free: u64 = first_disk.available_space();
+            let disks = Disks::new_with_refreshed_list();
+            if let Some(first_disk) = disks.first() {
+                let total_size = first_disk.total_space();
+                let free = first_disk.available_space();
 
-                return Ok(StorageInfo {
-                    total_size: bytesize::ByteSize(total_size),
-                    free: bytesize::ByteSize(free),
+                Ok(StorageInfo {
+                    total_size: ByteSize(total_size),
+                    free: ByteSize(free),
                     used: (total_size as f64) - (free as f64),
-                });
+                })
             } else {
                 println!("No disks found.");
-                return Err(Box::new(e));
+                Err(Box::new(e))
             }
         }
     }
