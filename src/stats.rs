@@ -1,7 +1,7 @@
 // Helper script to get system statistics
 use bytesize::ByteSize;
 use std::time::Duration;
-use sysinfo::{Disks, System};
+use sysinfo::{Disks, MemoryRefreshKind, ProcessRefreshKind, RefreshKind, System};
 use systemstat::Platform;
 use systemstat::System as systemstat_system;
 
@@ -60,9 +60,9 @@ pub fn get_machine_info() -> MachineInfo {
 }
 
 pub fn get_shell() -> Shell {
-    let system = sysinfo::System::new_with_specifics(
-        sysinfo::RefreshKind::new().with_processes(sysinfo::ProcessRefreshKind::new()),
-    );
+    let system =
+        System::new_with_specifics(RefreshKind::new().with_processes(ProcessRefreshKind::new()));
+
     let my_pid = sysinfo::get_current_pid().expect("unable to get PID of the current process");
     let parent_pid = system
         .process(my_pid)
@@ -136,9 +136,9 @@ pub fn get_storage_information() -> Result<StorageInfo, Box<dyn std::error::Erro
 }
 
 pub fn get_memory() -> MemoryInfo {
-    let mut sys = System::new_all();
-
-    sys.refresh_all();
+    let sys = System::new_with_specifics(
+        RefreshKind::new().with_memory(MemoryRefreshKind::new().with_ram()),
+    );
 
     MemoryInfo {
         total: sys.total_memory(),
